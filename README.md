@@ -80,6 +80,7 @@ You normally don’t need to edit this manually – use the tray menu instead.
 ## 🛡️ Requirements
 
 - Windows 10 or 11
+  
 -------Optional--------
 - Python 3.10+ (only for development; end-users can use compiled `.exe`)
 - Libraries (included in packaged build):
