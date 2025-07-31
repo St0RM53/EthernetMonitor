@@ -1,6 +1,6 @@
 # EthernetMonitor
 
-![icon](./icon.png) <!-- Optional: Replace with actual path or badge -->
+![icon](./logo.png) <!-- Optional: Replace with actual path or badge -->
 
 **EthernetMonitor** is a lightweight Windows system tray utility that monitors your Ethernet adapter's link speed and notifies you if it drops below an expected threshold. It’s useful for power users, gamers, and network administrators who want to be alerted of degraded network conditions due to faulty cables, auto-negotiation failures, or hardware issues.
 
@@ -26,8 +26,8 @@
 To use **EthernetMonitor**:
 
 1. **Download the latest release** from the [Releases](https://github.com/St0RM53/EthernetMonitor/releases) page.
-2. Extract the contents of the zip file.
-3. Run `EthernetMonitor.exe`.
+2. Run `EthernetMonitor.exe`.
+3. Configure the program by right clicking the tray icon and selecting your prefered settings. Don't forget to select the correct network interface you will be monitoring!
 
 No installation is required. It runs in the background from the system tray.
 
@@ -37,7 +37,7 @@ No installation is required. It runs in the background from the system tray.
 
 When you run the program for the first time, a tray icon will appear:
 
-- 🟢 **Green icon** – Ethernet is running at or above the expected speed.
+- ⚪ **Standard icon** – Ethernet is running at or above the expected speed.
 - 🔴 **Red icon** – Speed is lower than expected or connection is down.
 
 ### Right-click the tray icon to open the menu. Here's what each option does:
@@ -80,6 +80,7 @@ You normally don’t need to edit this manually – use the tray menu instead.
 ## 🛡️ Requirements
 
 - Windows 10 or 11
+-------Optional--------
 - Python 3.10+ (only for development; end-users can use compiled `.exe`)
 - Libraries (included in packaged build):
   - `psutil`
@@ -91,13 +92,23 @@ You normally don’t need to edit this manually – use the tray menu instead.
 
 ---
 
+## 🏃‍♂️ Running python script directly (without build)
+
+To run the program with python without building it:
+
+```bash
+python ethernet_monitor.py
+```
+
+---
+
 ## 🧰 Building from Source (Optional)
 
 To build your own `.exe` using PyInstaller:
 
 ```bash
 pip install pyinstaller
-pyinstaller --noconfirm --onefile --windowed --icon=ethernet_monitor_icon.ico ethernet_monitor.py
+pyinstaller --clean --noconfirm ethernet_monitor.spec
 ```
 
 If you're using `.png` icons or external files, you may need to update the `.spec` file to include them.
@@ -106,13 +117,9 @@ If you're using `.png` icons or external files, you may need to update the `.spe
 
 ## 🐞 Troubleshooting
 
-- **No notification shows up?**
-  - Ensure you're on Windows 10 or 11.
-  - Make sure `ethernet_monitor_icon.ico` is present in the same directory.
+- **No error shows up?**
   - Check `ethernet_monitor.log` for errors.
-- **Tray icon disappears after notification?**
-  - Use `winotify` instead of `win10toast_click`, which causes `WNDPROC` errors.
-
+    
 ---
 
 ## 📜 License

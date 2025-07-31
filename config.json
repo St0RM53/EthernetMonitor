@@ -1,0 +1,1 @@
+{"interface_name": "Ethernet", "expected_speed_mbps": 1000, "check_interval_seconds": 60, "start_with_windows": false, "notification_interval_seconds": 60}
