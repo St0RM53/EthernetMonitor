@@ -119,7 +119,7 @@ If you're using `.png` icons or external files, you may need to update the `.spe
 ## 🐞 Troubleshooting
 
 - **No error shows up?**
-  - Open config folder (right click on tray or in %appdata%\EthernetMonitor\) and check `ethernet_monitor.log` for errors.
+  - Open config folder (right click on tray or in `%appdata%\EthernetMonitor\`) and check `ethernet_monitor.log` for errors.
     
 ---
 
