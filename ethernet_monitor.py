@@ -17,18 +17,26 @@ from pystray import Icon, MenuItem as item, Menu
 from winotify import Notification, audio
 from PIL import Image
 
+import tkinter as tk
+from tkinter import messagebox   # Alternative messagebox solution that works in W11 24H2
+
+
+APP_NAME = "EthernetMonitor"
+APPDATA_DIR = Path(os.getenv("APPDATA")) / APP_NAME
+APPDATA_DIR.mkdir(parents=True, exist_ok=True)
+CONFIG_PATH = APPDATA_DIR / "config.json"
+LOG_PATH = APPDATA_DIR / "ethernet_monitor.log"
+
+
 logging.basicConfig(
-    filename="ethernet_monitor.log",
+    filename=str(LOG_PATH),
     level=logging.DEBUG,
     format="%(asctime)s [%(levelname)s] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-print("Script started...")
 
-APP_NAME = "EthernetMonitor"
-CONFIG_PATH = Path("config.json")
-CONFIG_FILE = 'config.json'
+print("Script started...")
 
 DEFAULT_CONFIG = {
     "interface_name": "Ethernet",
@@ -76,15 +84,15 @@ def get_shortcut_path():
 def add_to_startup():
     shortcut_path = get_shortcut_path()
     target = sys.executable
-    script = os.path.abspath(__file__)
     shell = win32com.client.Dispatch("WScript.Shell")
     shortcut = shell.CreateShortcut(shortcut_path)
     shortcut.TargetPath = target
-    shortcut.Arguments = f'"{script}"'
-    shortcut.WorkingDirectory = os.path.dirname(script)
-    shortcut.IconLocation = os.path.abspath("ethernet_monitor_icon.ico")
+    shortcut.Arguments = ""  # Don't pass script path
+    shortcut.WorkingDirectory = os.path.dirname(target)  # Proper start dir
+    #shortcut.IconLocation = os.path.abspath("ethernet_monitor_icon.ico")  # Breaks icon for the startup shortcut; when you leave it out explorer uses the targeted exe icon, so it's the simplest solution
     shortcut.Save()
     logging.info(f"[Startup] Added to startup: {shortcut_path}")
+
 
 def remove_from_startup():
     shortcut_path = get_shortcut_path()
@@ -98,8 +106,9 @@ def remove_from_startup():
 # --- Configuration ---
 
 def save_config(config_data):
-    with open(CONFIG_FILE, 'w') as f:
-        json.dump(config_data, f)
+    with open(CONFIG_PATH, 'w') as f:
+        json.dump(config_data, f, indent=4)
+
 
 def load_config():
     if not CONFIG_PATH.exists():
@@ -107,6 +116,7 @@ def load_config():
             json.dump(DEFAULT_CONFIG, f, indent=4)
     with open(CONFIG_PATH, "r") as f:
         return json.load(f)
+
 
 def set_check_interval(seconds):
     config = load_config()
@@ -199,19 +209,27 @@ def quit_action(icon, item):
     icon.visible = False
     icon.stop()
 
-def show_about(icon, item):
-    info = (
-        "Ethernet Monitor\n"
-        "Version: 1.0.0-beta\n"
-        "Date: 30/07/25\n"
-        "Author: St0RM53\n"
-        "GitHub: https://github.com/St0RM53/EthernetMonitor\n"
-        "License: GNU AGPLv3\n"
-        "\n"
-        "This tool monitors Ethernet speed and alerts you\n"
-        "if it drops below the expected value."
-    )
-    ctypes.windll.user32.MessageBoxW(0, info, "About Ethernet Monitor", 0x40)
+def show_about(icon=None, item=None):
+    def show():
+        root = tk.Tk()
+        root.withdraw()  # Hide main window
+        messagebox.showinfo(
+            "About Ethernet Monitor",
+            "Ethernet Monitor\n"
+            "Version: 1.0.1\n"
+            "Date: 07/08/25\n"
+            "Author: St0RM53\n"
+            "GitHub: https://github.com/St0RM53/EthernetMonitor\n"
+            "License: GNU AGPLv3\n"
+            "\n"
+            "This tool monitors Ethernet speed and alerts you\n"
+            "if it drops below the expected value."
+        )
+        root.destroy()
+
+    # Run it in a new thread to avoid blocking the tray
+    threading.Thread(target=show).start()
+
 
 def open_github(icon, item):
     webbrowser.open("https://github.com/St0RM53/EthernetMonitor")

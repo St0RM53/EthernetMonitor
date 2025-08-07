@@ -47,7 +47,9 @@ exe = EXE(
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=False,  # Set to True if you want a console window for logging
+    console=False,
     icon='ethernet_monitor_icon.ico',
-    onefile=True   # <--- This is the key setting
+	version='version_info.txt',
+    manifest='app.manifest',
+    onefile=True
 )
