@@ -1,0 +1,14 @@
+# Ethernet Monitor - Python 3.14 runtime/build dependencies
+#
+# Tested environment:
+# Python 3.14.4 (Windows x64)
+
+psutil==7.2.2
+winshell==0.6
+pywin32==312
+pystray==0.19.5
+winotify==1.1.0
+Pillow==12.3.0
+
+# Build dependency
+pyinstaller==6.22.0
